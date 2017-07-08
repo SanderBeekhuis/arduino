@@ -4,8 +4,9 @@
 #include <avr/power.h>
 #endif
 
-//wait of 1000 for normal operation
-#define WAIT 1000
+#define WAIT 1000 //wait of 1000 for normal operation
+#define UNITTIME 1 //600 for 10 Minutes
+#define TIMESTARTLED 1
 #define PIN 6
 
 // Parameter 1 = number of pixels in strip
@@ -18,10 +19,14 @@
 //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(29, PIN, NEO_GRB + NEO_KHZ800);
 
+uint32_t RED = strip.Color(128,0,0);
+
+
 
 int SWITCH = 3;
 int n = 0;
 int Toggle = 0;
+int seconds = 0;
 
 
 // the setup function runs once when you press reset or power the board
@@ -38,22 +43,39 @@ void setup() {
 }
 
 // the loop function runs over and over again forever
-void loop() {
+void loop() {  
+  // state light
   int state = digitalRead(SWITCH);
   Serial.println(state);
   digitalWrite(LED_BUILTIN, state);
   strip.setPixelColor(0, stateToColor(state));
+  
+  
+  //time
+  seconds++;
+  showTime(seconds);
+  
   strip.show();
   delay(WAIT);
-
 }
 
 uint32_t stateToColor(int state) {
-  if (state == 1)
+  if (state == 1){
     return strip.Color(65, 65, 65);
-  else
+  }
+  else{
     return strip.Color(0, 0, 0);
-}
+  };
+};
+
+void showTime(int seconds){
+    int units = seconds / UNITTIME;
+    int i;
+    for (int i=TIMESTARTLED; i<units; i++){
+        strip.setPixelColor(i, RED);
+    }
+};
+
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
