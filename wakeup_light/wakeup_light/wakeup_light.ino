@@ -56,7 +56,7 @@ void setup()
 void loop()
 {
   check_alarm();
-  delay(1000);
+  delay(SLEEP);
 }
 
 void check_alarm()
@@ -95,11 +95,11 @@ uint32_t white(uint16_t b)
 
 // b can range from 0 to 255
 // 0 is no liht
-// 51 maxes red brightness
+// 64 maxes red brightness
 // 255 for full white
 uint32_t redToWhite(byte b)
 {
-  byte red = min(5 * b, 255);
+  byte red = min(4 * b, 255);
   byte green = min(2 * b, 255);
   byte blue = min(b, 255);
   return strip.Color(red, green, blue);
