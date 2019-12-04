@@ -5,6 +5,7 @@
 
 #include <Adafruit_NeoPixel.h>
 
+// NeoPixel strand settings
 #define STRAND_PIN 10
 #define STRAND_LENGTH 120
 
@@ -14,6 +15,9 @@
 #define RTC_CLK 5
 #define RTC_DAT 4
 #define RTC_RST 3
+
+//Operational constants
+#define SLEEP 1000 * 60 //1 minuteu
 
 // RTC Pins: RST,DAT,CLK
 DS1302 rtc(RTC_RST, RTC_DAT, RTC_CLK);
@@ -32,6 +36,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRAND_LENGTH, STRAND_PIN, NEO_GRB +
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
+
+uint32_t BLACK = strip.Color(0, 0, 0);
 
 void setup()
 {
@@ -61,29 +67,15 @@ void check_alarm()
            t.yr, t.mon, t.date,
            t.hr, t.min, t.sec);
   Serial.println(buf);
-  setRedToWhite(t.sec);
-}
 
-void ring_alarm()
-{
-}
-
-// Sets the whole strip to brigthness b between 0-255
-void setWhite(uint16_t b)
-{
-  setColor(strip.Color(b, b, b));
-}
-
-// b can range from 0 to 255
-// 0 is no liht
-// 51 maxes red brightness
-// 255 for full white
-void setRedToWhite(byte b)
-{
-  byte red = min(5 * b, 255);
-  byte green = min(2 * b, 255);
-  byte blue = min(b, 255);
-  setColor(strip.Color(red, green, blue));
+  if (t.hr == 6)
+  {
+    setColor(redToWhite(t.min));
+  }
+  else
+  {
+    setColor(BLACK);
+  }
 }
 
 void setColor(uint32_t c)
@@ -93,4 +85,22 @@ void setColor(uint32_t c)
     strip.setPixelColor(i, c);
   }
   strip.show();
+}
+
+// Returns white whith brigthness b between 0-255
+uint32_t white(uint16_t b)
+{
+  return strip.Color(b, b, b);
+}
+
+// b can range from 0 to 255
+// 0 is no liht
+// 51 maxes red brightness
+// 255 for full white
+uint32_t redToWhite(byte b)
+{
+  byte red = min(5 * b, 255);
+  byte green = min(2 * b, 255);
+  byte blue = min(b, 255);
+  return strip.Color(red, green, blue);
 }
