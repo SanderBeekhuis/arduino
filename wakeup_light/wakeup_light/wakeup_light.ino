@@ -16,9 +16,6 @@
 #define RTC_DAT 4
 #define RTC_RST 3
 
-//Operational constants
-#define SLEEP 1000 * 60 //1 minuteu
-
 // RTC Pins: RST,DAT,CLK
 DS1302 rtc(RTC_RST, RTC_DAT, RTC_CLK);
 
@@ -56,7 +53,7 @@ void setup()
 void loop()
 {
   check_alarm();
-  delay(SLEEP);
+  delay(60000);
 }
 
 void check_alarm()
