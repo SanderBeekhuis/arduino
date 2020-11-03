@@ -1,4 +1,3 @@
-
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>
@@ -19,8 +18,11 @@
 //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(29, PIN, NEO_GRB + NEO_KHZ800);
 
-uint32_t RED = strip.Color(128,0,0);
-
+int BRIGHTNESS = 8
+uint32_t BLUE = strip.Color(0,0,16*BRIGHTNESS);
+uint32_t GREEN = strip.Color(0,16*BRIGHTNESS,0);
+uint32_t YELLOW = strip.Color(16*BRIGHTNESS,16*BRIGHTNESS,0);
+uint32_t RED = strip.Color(,0,0);
 
 
 int SWITCH = 3;
@@ -43,18 +45,18 @@ void setup() {
 }
 
 // the loop function runs over and over again forever
-void loop() {  
+void loop() {
   // state light
   int state = digitalRead(SWITCH);
   Serial.println(state);
   digitalWrite(LED_BUILTIN, state);
   strip.setPixelColor(0, stateToColor(state));
-  
+
   
   //time
   seconds++;
   showTime(seconds);
-  
+
   strip.show();
   delay(WAIT);
 }
